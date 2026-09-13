@@ -173,7 +173,7 @@ ol.steps li{margin:6px 0}
     <figcaption>JMC Build 1, Stage 3. Printed from SCARM 2.0.1.</figcaption>
   </figure>
 
-  <div class="foot">Kept up to date by Matt. <a href="mailto:matt_cornock@outlook.com?subject=JMC%3A%20change%20request">Email a change</a> · Version <span id="ver">1.4</span> · 13 Sep 2026</div>
+  <div class="foot">Kept up to date by Matt. <a href="mailto:matt_cornock@outlook.com?subject=JMC%3A%20change%20request">Email a change</a> · Version <span id="ver">1.5</span> · 13 Sep 2026</div>
 </section>
 
 <!-- ============ CONVERT ============ -->
@@ -696,9 +696,44 @@ ol.steps li{margin:6px 0}
   </div>
 </section>
 
+<!-- ============ SCARM DESIGN REQUEST ============ -->
+<section class="page" id="p-scarm">
+  <h2>Request a SCARM design file</h2>
+  <p>Describe a track plan, or a change to the one you have, in your own words. You get back a <b>.scarm file</b> that opens straight in SCARM, plus a picture of it and a note on what was assumed. Then you pull it about in SCARM as usual.</p>
+  <div class="card">
+    <label for="scWhat">What do you want designed?</label>
+    <textarea id="scWhat" rows="6" placeholder="e.g. Redo the top-left station so the platform fits the Scotsman and four coaches, with a passing loop. Keep everything else. Peco Code 100, medium points, nothing under 600 mm on the main." data-store="sc-what"></textarea>
+    <div class="row">
+      <div><label for="scBoard">Board size, mm</label><input type="text" id="scBoard" placeholder="4700 × 2400" value="4700 × 2400" data-store="sc-board"></div>
+      <div><label for="scMinR">Minimum radius, mm</label><input type="number" id="scMinR" inputmode="numeric" value="600" data-store="sc-minr"></div>
+    </div>
+    <label for="scMust">Must have</label>
+    <input type="text" id="scMust" placeholder="e.g. five-road yard, reversing loop, trestle over the river" data-store="sc-must">
+    <label for="scStart">Start from</label>
+    <select id="scStart" data-store="sc-start">
+      <option value="current">My current plan (attach the .scarm file below)</option>
+      <option value="blank">A blank board</option>
+      <option value="sketch">My sketch or photo (attach below)</option>
+    </select>
+    <label>Files: your current .scarm, sketches, photos</label>
+    <div class="drop" id="scDrop">
+      <input type="file" id="scFiles" accept="image/*,.pdf,.scarm,.atps" multiple>
+      <p style="margin:0 0 8px">Attach the .scarm file you're working from, or a sketch. Drag, pick, or paste a screenshot.</p>
+      <button class="secondary" type="button" onclick="document.getElementById('scFiles').click()">Add files</button>
+    </div>
+    <div id="scThumbs" class="thumbs"></div>
+    <button class="btn" id="scSend" type="button" style="display:block;width:100%;margin-top:14px">Send the design request</button>
+    <div id="scStatus" class="muted small" style="margin:10px 0 0"></div>
+  </div>
+  <div class="card tint small">
+    <b>Tip.</b> Attaching your current .scarm file is the single most useful thing. It means the new file uses your exact board, your exact track pieces, and slots into what you already have.
+  </div>
+</section>
+
 </main>
 
 <div class="more-menu" id="moreMenu">
+  <button data-go="p-scarm">Request a SCARM design file</button>
   <button data-go="p-print">Request a printed part</button>
   <button data-go="p-gloss">What the words mean</button>
   <button data-go="p-plan">Check the plan (SCARM)</button>
@@ -944,34 +979,10 @@ document.getElementById('fileIn').addEventListener('change', async e=>{
   <div class="tablewrap" style="margin-top:10px"><table><tr><th>Code</th><th>What</th><th>Qty</th></tr>${lines}</table></div>`;
 });
 
-/* ---------- print request with uploads ---------- */
+/* ---------- request forms with uploads ---------- */
 const SB_URL = 'https://dbofnsgcossbyqzgheub.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRib2Zuc2djb3NzYnlxemdoZXViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NDg3MzEsImV4cCI6MjA5MTEyNDczMX0.h3416gfn77SrM3a3htTua5qgPR244DVKySGAYG8NSMU';
-const prFiles = [];
-const prThumbs = document.getElementById('prThumbs'), prDrop = document.getElementById('prDrop'), prStatus = document.getElementById('prStatus');
-function addFiles(list){
-  for (const f of list){ if (!f || !(f.type.startsWith('image/') || f.type==='application/pdf')) continue; if (f.size > 15*1024*1024){ prStatus.textContent = f.name + ' is over 15 MB, skipped.'; continue; } prFiles.push(f); }
-  renderThumbs();
-}
-function renderThumbs(){
-  prThumbs.innerHTML = '';
-  prFiles.forEach((f, i)=>{
-    const d = document.createElement('div'); d.className = 'th';
-    if (f.type.startsWith('image/')){ const img = document.createElement('img'); img.src = URL.createObjectURL(f); img.onload = ()=>URL.revokeObjectURL(img.src); d.appendChild(img); }
-    else { const p = document.createElement('div'); p.className = 'pdf'; p.textContent = f.name; d.appendChild(p); }
-    const x = document.createElement('button'); x.className = 'x'; x.type = 'button'; x.textContent = '×'; x.setAttribute('aria-label','remove'); x.onclick = ()=>{ prFiles.splice(i,1); renderThumbs(); };
-    d.appendChild(x); prThumbs.appendChild(d);
-  });
-}
-document.getElementById('prFiles').addEventListener('change', e=>{ addFiles(e.target.files); e.target.value = ''; });
-['dragenter','dragover'].forEach(ev=>prDrop.addEventListener(ev, e=>{ e.preventDefault(); prDrop.classList.add('over'); }));
-['dragleave','drop'].forEach(ev=>prDrop.addEventListener(ev, e=>{ e.preventDefault(); prDrop.classList.remove('over'); }));
-prDrop.addEventListener('drop', e=>addFiles(e.dataTransfer.files));
-document.addEventListener('paste', e=>{
-  if (!document.getElementById('p-print').classList.contains('active')) return;
-  const items = [...(e.clipboardData?.items||[])].filter(it=>it.kind==='file').map(it=>it.getAsFile());
-  if (items.length){ e.preventDefault(); items.forEach((f,i)=>{ if (f && !f.name.includes('.')) Object.defineProperty(f,'name',{value:`screenshot-${Date.now()}-${i}.png`}); }); addFiles(items); prStatus.textContent = 'Screenshot added.'; }
-});
+const OK_TYPES = f => f.type.startsWith('image/') || f.type==='application/pdf' || /\.(scarm|atps)$/i.test(f.name);
 async function sbUpload(f, folder){
   const safe = f.name.replace(/[^A-Za-z0-9._-]+/g,'_').slice(-80) || 'file';
   const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2,8)}-${safe}`;
@@ -979,28 +990,64 @@ async function sbUpload(f, folder){
   if (!r.ok) throw new Error('upload failed ' + r.status + ' ' + (await r.text()).slice(0,120));
   return { path, name: f.name, size: f.size, type: f.type };
 }
-document.getElementById('prSend').addEventListener('click', async ()=>{
-  const what = document.getElementById('prWhat').value.trim(), qty = +document.getElementById('prQty').value || 1, size = document.getElementById('prSize').value.trim(), like = document.getElementById('prLike').value.trim();
-  if (!what){ document.getElementById('prWhat').focus(); prStatus.textContent = 'Say what it is first.'; return; }
-  const btn = document.getElementById('prSend'); btn.disabled = true;
-  try {
-    const folder = new Date().toISOString().slice(0,10) + '-' + Math.random().toString(36).slice(2,8);
-    const files = [];
-    for (let i=0;i<prFiles.length;i++){ prStatus.textContent = `Uploading photo ${i+1} of ${prFiles.length}…`; files.push(await sbUpload(prFiles[i], folder)); }
-    prStatus.textContent = 'Sending…';
-    const r = await fetch(`${SB_URL}/rest/v1/jmc_requests`, { method:'POST', headers:{ 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY, 'Content-Type':'application/json', 'Prefer':'return=minimal' }, body: JSON.stringify({ kind:'print', what, qty, size, looks_like: like, files }) });
-    if (!r.ok) throw new Error('send failed ' + r.status);
-    prStatus.innerHTML = `<span class="verdict">Sent</span> &nbsp;${files.length} photo${files.length===1?'':'s'} attached. Matt gets it within the half hour. The design file, detail PDF and difficulty summary come back by email.`;
-    document.getElementById('prWhat').value = ''; document.getElementById('prSize').value = ''; document.getElementById('prLike').value = ''; document.getElementById('prQty').value = 1;
-    ['pr-what','pr-size','pr-like','pr-qty'].forEach(k=>S.set(k, k==='pr-qty'?'1':''));
-    prFiles.length = 0; renderThumbs();
-  } catch(err){
-    prStatus.innerHTML = `<span class="verdict red">Didn't send</span> &nbsp;${err.message}. Try again, or use the email link below.`;
-  } finally { btn.disabled = false; }
-});
+function requestForm(o){
+  /* o: {page, kind, files, thumbs, drop, status, send, what, fields(), clear(), doneMsg} */
+  const files = [];
+  const thumbs = document.getElementById(o.thumbs), drop = document.getElementById(o.drop), status = document.getElementById(o.status), btn = document.getElementById(o.send);
+  function add(list){
+    for (const f of list){ if (!f || !OK_TYPES(f)) continue; if (f.size > 15*1024*1024){ status.textContent = f.name + ' is over 15 MB, skipped.'; continue; } files.push(f); }
+    render();
+  }
+  function render(){
+    thumbs.innerHTML = '';
+    files.forEach((f, i)=>{
+      const d = document.createElement('div'); d.className = 'th';
+      if (f.type.startsWith('image/')){ const img = document.createElement('img'); img.src = URL.createObjectURL(f); img.onload = ()=>URL.revokeObjectURL(img.src); d.appendChild(img); }
+      else { const p = document.createElement('div'); p.className = 'pdf'; p.textContent = f.name; d.appendChild(p); }
+      const x = document.createElement('button'); x.className = 'x'; x.type = 'button'; x.textContent = '×'; x.setAttribute('aria-label','remove'); x.onclick = ()=>{ files.splice(i,1); render(); };
+      d.appendChild(x); thumbs.appendChild(d);
+    });
+  }
+  document.getElementById(o.files).addEventListener('change', e=>{ add(e.target.files); e.target.value = ''; });
+  ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.remove('over'); }));
+  drop.addEventListener('drop', e=>add(e.dataTransfer.files));
+  document.addEventListener('paste', e=>{
+    if (!document.getElementById(o.page).classList.contains('active')) return;
+    const items = [...(e.clipboardData?.items||[])].filter(it=>it.kind==='file').map(it=>it.getAsFile());
+    if (items.length){ e.preventDefault(); items.forEach((f,i)=>{ if (f && !f.name.includes('.')) Object.defineProperty(f,'name',{value:`screenshot-${Date.now()}-${i}.png`}); }); add(items); status.textContent = 'Screenshot added.'; }
+  });
+  btn.addEventListener('click', async ()=>{
+    const what = document.getElementById(o.what).value.trim();
+    if (!what){ document.getElementById(o.what).focus(); status.textContent = 'Say what you want first.'; return; }
+    btn.disabled = true;
+    try {
+      const folder = new Date().toISOString().slice(0,10) + '-' + Math.random().toString(36).slice(2,8);
+      const up = [];
+      for (let i=0;i<files.length;i++){ status.textContent = `Uploading file ${i+1} of ${files.length}…`; up.push(await sbUpload(files[i], folder)); }
+      status.textContent = 'Sending…';
+      const r = await fetch(`${SB_URL}/rest/v1/jmc_requests`, { method:'POST', headers:{ 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY, 'Content-Type':'application/json', 'Prefer':'return=minimal' }, body: JSON.stringify({ kind:o.kind, what, ...o.fields(), files: up }) });
+      if (!r.ok) throw new Error('send failed ' + r.status);
+      status.innerHTML = `<span class="verdict">Sent</span> &nbsp;${up.length} file${up.length===1?'':'s'} attached. ${o.doneMsg}`;
+      o.clear(); files.length = 0; render();
+    } catch(err){
+      status.innerHTML = `<span class="verdict red">Didn't send</span> &nbsp;${err.message}. Try again in a minute, or <a href="mailto:matt_cornock@outlook.com?subject=JMC%3A%20${o.kind}%20request">email it instead</a>.`;
+    } finally { btn.disabled = false; }
+  });
+}
+const v = id => document.getElementById(id).value.trim();
+const clr = (ids, keys) => { ids.forEach(i=>document.getElementById(i).value=''); keys.forEach(k=>S.set(k,'')); };
+requestForm({ page:'p-print', kind:'print', files:'prFiles', thumbs:'prThumbs', drop:'prDrop', status:'prStatus', send:'prSend', what:'prWhat',
+  fields: ()=>({ qty: +document.getElementById('prQty').value || 1, size: v('prSize'), looks_like: v('prLike') }),
+  clear: ()=>{ clr(['prWhat','prSize','prLike'], ['pr-what','pr-size','pr-like']); document.getElementById('prQty').value = 1; S.set('pr-qty','1'); },
+  doneMsg: 'Matt gets it within the half hour. The design file, detail PDF and difficulty summary come back by email.' });
+requestForm({ page:'p-scarm', kind:'scarm', files:'scFiles', thumbs:'scThumbs', drop:'scDrop', status:'scStatus', send:'scSend', what:'scWhat',
+  fields: ()=>({ size: v('scBoard') + ' board, min radius ' + v('scMinR') + ' mm', looks_like: 'Must have: ' + v('scMust') + '. Start from: ' + document.getElementById('scStart').value }),
+  clear: ()=>{ clr(['scWhat','scMust'], ['sc-what','sc-must']); },
+  doneMsg: 'Matt gets it within the half hour. The .scarm file and a picture of the plan come back by email.' });
 document.getElementById('prMailFallback').addEventListener('click', e=>{
   e.preventDefault();
-  const what = document.getElementById('prWhat').value.trim(), qty = document.getElementById('prQty').value, size = document.getElementById('prSize').value.trim(), like = document.getElementById('prLike').value.trim();
+  const what = v('prWhat'), qty = document.getElementById('prQty').value, size = v('prSize'), like = v('prLike');
   const body = `Print request from the JMC page\n\nWhat and where:\n${what}\n\nHow many: ${qty || 1}\nSizes: ${size || 'not sure, please work it out'}\nShould look like: ${like || '-'}\n\n(Photos attached.)\n`;
   location.href = 'mailto:matt_cornock@outlook.com?subject=' + encodeURIComponent('JMC: print request - ' + what.slice(0,50)) + '&body=' + encodeURIComponent(body);
 });
