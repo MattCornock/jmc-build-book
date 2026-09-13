@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JMC Build 1</title>
+<meta name="description" content="The build book for JMC Build 1, an HO scale model railway.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1b5e3a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{
+  --green:#1b5e3a; --green-dk:#134429; --cream:#f7f3ea; --paper:#fffdf8; --ink:#1e2420; --muted:#5f6a64;
+  --line:#dcd6c8; --amber:#c8871a; --red:#b13a2a; --blue:#1f4e79; --ok:#2e7d4f;
+  --radius:12px; --tab-h:64px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--cream);color:var(--ink);font:17px/1.5 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom))}
+header.top{background:var(--green);color:#fff;padding:14px 18px 12px;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+header.top h1{margin:0;font-size:22px;letter-spacing:.3px;font-weight:700}
+header.top .sub{font-size:13px;opacity:.85;margin-top:2px}
+main{max-width:720px;margin:0 auto;padding:16px 16px 24px}
+section.page{display:none}
+section.page.active{display:block}
+h2{font-size:21px;margin:6px 0 12px;color:var(--green-dk)}
+h3{font-size:17px;margin:18px 0 8px;color:var(--green-dk)}
+p{margin:0 0 10px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin:0 0 14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.card.tint{background:#eef5ef;border-color:#cfe0d3}
+.card.warn{background:#fdf4e3;border-color:#efd9ad}
+.muted{color:var(--muted);font-size:14px}
+.small{font-size:14px}
+ul.clean{list-style:none;padding:0;margin:0}
+ul.clean li{padding:8px 0;border-bottom:1px solid var(--line)}
+ul.clean li:last-child{border-bottom:0}
+ul.clean b{color:var(--green-dk)}
+ul.tight{padding-left:20px;margin:0}
+ul.tight li{margin:4px 0}
+label{display:block;font-size:14px;color:var(--muted);margin:10px 0 4px}
+input[type=number],input[type=text],select,textarea{width:100%;font:inherit;font-size:18px;padding:10px 12px;border:1px solid #bfb9ab;border-radius:10px;background:#fff;color:var(--ink)}
+input[type=number]{-moz-appearance:textfield}
+.row{display:flex;gap:10px}
+.row>*{flex:1;min-width:0}
+.result{background:#eef5ef;border-radius:10px;padding:12px 14px;margin-top:12px;font-size:17px}
+.result b{font-size:20px;color:var(--green-dk)}
+.verdict{display:inline-block;padding:3px 10px;border-radius:20px;font-size:14px;font-weight:600;color:#fff;background:var(--ok)}
+.verdict.amber{background:var(--amber)} .verdict.red{background:var(--red)}
+button,.btn{font:inherit;font-size:16px;font-weight:600;padding:12px 16px;border-radius:10px;border:0;background:var(--green);color:#fff;cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
+button.secondary,.btn.secondary{background:#fff;color:var(--green-dk);border:1.5px solid var(--green)}
+button.small,.btn.small{font-size:14px;padding:8px 12px}
+button.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);font-weight:500}
+button:active{transform:translateY(1px)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.4px}
+td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.pill{display:inline-block;background:#e6efe8;color:var(--green-dk);border-radius:20px;padding:2px 10px;font-size:13px;font-weight:600;margin:2px 4px 2px 0}
+.pill.blue{background:#e3ebf3;color:var(--blue)} .pill.amber{background:#f8ecd6;color:#8a5a0c} .pill.red{background:#f6e0dc;color:var(--red)}
+figure{margin:0 0 16px}
+figure img{width:100%;height:auto;border-radius:10px;display:block;background:#ddd}
+figcaption{font-size:14px;color:var(--muted);padding:6px 2px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:480px){.grid2{grid-template-columns:1fr}}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;height:calc(var(--tab-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:#fff;border-top:1px solid var(--line);display:flex;z-index:10}
+nav.tabs button{flex:1;background:none;color:var(--muted);border:0;border-radius:0;padding:8px 2px 6px;font-size:11px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;letter-spacing:.2px}
+nav.tabs button .ic{font-size:22px;line-height:1}
+nav.tabs button.on{color:var(--green)}
+nav.tabs button.on .ic{transform:translateY(-1px)}
+.more-menu{display:none;position:fixed;left:0;right:0;bottom:calc(var(--tab-h) + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line);box-shadow:0 -6px 20px rgba(0,0,0,.12);z-index:9;padding:8px 0}
+.more-menu.open{display:block}
+.more-menu button{display:block;width:100%;text-align:left;background:none;color:var(--ink);border:0;border-radius:0;padding:14px 20px;font-size:17px;font-weight:500}
+.more-menu button:active{background:#f0ede4}
+.slot{border:1.5px dashed #bfb9ab;border-radius:10px;padding:10px 12px;margin:8px 0;background:#fff}
+.slot.filled{border-style:solid;border-color:var(--green)}
+.slot .name{font-weight:700;color:var(--green-dk)}
+.loco{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0;background:#fff}
+.loco .t{font-weight:700}
+.loco .meta{font-size:14px;color:var(--muted);margin:2px 0 6px}
+.check{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.check:last-child{border-bottom:0}
+.check input[type=checkbox]{width:22px;height:22px;margin-top:3px;flex:none;accent-color:var(--green)}
+.check .qty{width:64px;flex:none;font-size:16px;padding:6px 8px;text-align:center}
+.check .lbl{flex:1}
+.check .lbl small{display:block;color:var(--muted);font-size:13px}
+.check.done .lbl{text-decoration:line-through;color:var(--muted)}
+.foot{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.foot a{color:var(--green-dk)}
+.editable{border-bottom:1.5px dashed #bfb9ab;padding:0 2px;min-width:80px;display:inline-block}
+.stepper{display:flex;align-items:center;gap:8px}
+.stepper button{width:44px;height:44px;padding:0;font-size:22px;border-radius:50%;background:#fff;color:var(--green-dk);border:1.5px solid var(--green)}
+.stepper .val{min-width:80px;text-align:center;font-size:24px;font-weight:700;color:var(--green-dk)}
+details{border:1px solid var(--line);border-radius:10px;background:var(--paper);margin:0 0 10px;padding:0 14px}
+details summary{padding:12px 0;font-weight:600;cursor:pointer;color:var(--green-dk);list-style:none;display:flex;justify-content:space-between;align-items:center}
+details summary::after{content:"+";font-size:22px;color:var(--muted)}
+details[open] summary::after{content:"–"}
+details .body{padding:0 0 12px}
+ol.steps{padding-left:22px;margin:0}
+ol.steps li{margin:6px 0}
+.drop{border:2px dashed #bfb9ab;border-radius:12px;padding:20px;text-align:center;background:#fff}
+.drop input{display:none}
+.mono{font-family:ui-monospace,Consolas,monospace;font-size:14px;white-space:pre-wrap;background:#f3f0e8;border-radius:8px;padding:10px}
+.notice{font-size:14px;color:var(--muted);border-left:3px solid var(--green);padding:6px 10px;background:#fff;border-radius:0 8px 8px 0;margin:10px 0}
+.notice a{color:var(--green-dk);font-weight:600}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>JMC Build 1</h1>
+  <div class="sub">Build book · HO · Peco Code 100 · DCC</div>
+</header>
+
+<main>
+
+<!-- ============ HOME ============ -->
+<section class="page active" id="p-home">
+  <div class="card tint">
+    <p style="margin:0"><b>This is your page.</b> Every number, list and picture on it can be changed, added to, or thrown out. Email Matt what you want and it turns up here. Nothing to install, nothing to log into.</p>
+    <p style="margin:10px 0 0"><a class="btn small" href="mailto:matt_cornock@outlook.com?subject=JMC%3A%20change%20request&body=What%20I%20want%20changed%20or%20added%3A%0A%0A">Ask for a change</a></p>
+  </div>
+
+  <h2>Locked in</h2>
+  <div class="card">
+    <ul class="clean">
+      <li><b>Board</b> 4.7 × 2.4 m, L/U shape, operator well cut out bottom-middle, built in bolted sections</li>
+      <li><b>Scale</b> HO, 1:87, 16.5 mm gauge. OO models run on it too.</li>
+      <li><b>Track</b> Peco Streamline Code 100 flex, 914 mm lengths (SL-100)</li>
+      <li><b>Points</b> Peco Code 100 medium radius on main and yard, Electrofrog or Unifrog</li>
+      <li><b>Curves</b> 438 mm absolute minimum · 600 mm plus on the main · 900 mm plus where it fits</li>
+      <li><b>Control</b> DCC. NCE Power Cab or Digitrax Zephyr</li>
+      <li><b>Wiring</b> Two-wire bus under the board, a dropper from every length of track</li>
+      <li><b>Reversing loop</b> Bottom-left. One auto-reverser, insulated joiners both ends</li>
+      <li><b>Plan</b> Main loop · five-road storage yard right · station and scenery top-left · river with two bridges</li>
+      <li><b>River crossing</b> Curved timber trestle over a gully, board dropped 80–100 mm underneath</li>
+      <li><b>Retaining walls</b> Stepped cut-stone panels, printed</li>
+      <li><b>Scenery</b> Australian bush. Gum trees, scrub, carved strata cuttings, painted dirt</li>
+      <li><b>Planning tool</b> SCARM 2.0.1, set to millimetres</li>
+      <li><b>Track laying</b> Printed repositionable clips while planning. Pins and ballast when final.</li>
+    </ul>
+  </div>
+
+  <h2>Still deciding</h2>
+  <div class="card">
+    <ul class="clean">
+      <li><b>Locomotives</b> Two or three, plus maybe one special. See the Locos tab.</li>
+      <li><b>Era</b> 1988 V/Line, or 1990s National Rail. The loco choice settles it.</li>
+      <li><b>Station name</b> <span class="editable" contenteditable="true" id="stationName" data-store="stationName">Tap to name it</span></li>
+      <li><b>Point motors</b> Manual or motorised</li>
+      <li><b>Storage yard</b> Hidden or scenic</li>
+    </ul>
+    <p class="muted" style="margin:10px 0 0">Station name saves on this phone only.</p>
+  </div>
+
+  <h2>Notes to self</h2>
+  <div class="card">
+    <textarea id="notes" data-store="notes" rows="4" placeholder="Anything worth remembering. Saves on this phone."></textarea>
+  </div>
+
+  <figure>
+    <img src="img/plan.jpg" alt="SCARM plan of JMC Build 1, Stage 3" loading="lazy">
+    <figcaption>JMC Build 1, Stage 3. Printed from SCARM 2.0.1.</figcaption>
+  </figure>
+
+  <div class="foot">Kept up to date by Matt. <a href="mailto:matt_cornock@outlook.com?subject=JMC%3A%20change%20request">Email a change</a> · Version <span id="ver">1.0</span> · 13 Sep 2026</div>
+</section>
+
+<!-- ============ CONVERT ============ -->
+<section class="page" id="p-convert">
+  <h2>Millimetres and inches</h2>
+  <div class="card">
+    <label for="mm">Millimetres</label>
+    <input type="number" id="mm" inputmode="decimal" placeholder="0">
+    <label for="inch">Inches</label>
+    <input type="number" id="inch" inputmode="decimal" placeholder="0">
+    <div class="result" id="convOut">Type in either box.</div>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Ones that come up</h3>
+    <div class="tablewrap"><table>
+      <tr><th>Thing</th><th>mm</th><th>inches</th></tr>
+      <tr><td>Flex track length</td><td class="num">914</td><td class="num">36</td></tr>
+      <tr><td>Peco small point radius</td><td class="num">610</td><td class="num">24</td></tr>
+      <tr><td>Peco medium point radius</td><td class="num">914</td><td class="num">36</td></tr>
+      <tr><td>Peco large point radius</td><td class="num">1524</td><td class="num">60</td></tr>
+      <tr><td>Setrack R2 curve</td><td class="num">438</td><td class="num">17¼</td></tr>
+      <tr><td>Track centres, straight</td><td class="num">50</td><td class="num">2</td></tr>
+      <tr><td>Track centres, curves</td><td class="num">55–60</td><td class="num">2¼</td></tr>
+      <tr><td>Flyover clearance, railhead to railhead</td><td class="num">90</td><td class="num">3½</td></tr>
+      <tr><td>Platform height above rail</td><td class="num">12</td><td class="num">½</td></tr>
+      <tr><td>Board, long side</td><td class="num">4700</td><td class="num">185</td></tr>
+      <tr><td>Board, short side</td><td class="num">2400</td><td class="num">94½</td></tr>
+    </table></div>
+  </div>
+  <div class="card warn small">
+    <b>SCARM tip.</b> Settings → units → millimetres. The Peco library inside SCARM is already metric, so once this is set nothing is in inches.
+  </div>
+</section>
+
+<!-- ============ RADIUS ============ -->
+<section class="page" id="p-radius">
+  <h2>Will it run on this curve?</h2>
+  <div class="card">
+    <label for="radIn">Curve radius in mm</label>
+    <input type="number" id="radIn" inputmode="numeric" placeholder="e.g. 600">
+    <div class="result" id="radOut">Type a radius.</div>
+  </div>
+
+  <h3>Peco radii, Code 100</h3>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <tr><th>Item</th><th>Radius</th><th>Verdict</th></tr>
+      <tr><td>Setrack R1</td><td class="num">371 mm</td><td>Four-wheel wagons and small tank engines only. Avoid.</td></tr>
+      <tr><td>Setrack R2</td><td class="num">438 mm</td><td>Most things run. Long locos and coaches look wrong and can bind.</td></tr>
+      <tr><td>Setrack R3</td><td class="num">505 mm</td><td>Safe for almost everything. Still tight to the eye.</td></tr>
+      <tr><td>Setrack R4</td><td class="num">572 mm</td><td>Good. Bogie coaches and six-axle diesels are fine.</td></tr>
+      <tr><td>Streamline small point</td><td class="num">610 mm</td><td>Yard and sidings. Not for the main.</td></tr>
+      <tr><td>Streamline medium point</td><td class="num">914 mm</td><td>The standard for this layout.</td></tr>
+      <tr><td>Streamline large point</td><td class="num">1524 mm</td><td>Mainline crossovers if space allows. Looks superb.</td></tr>
+      <tr><td>Curved point, inner / outer</td><td class="num">762 / 1524 mm</td><td>Useful where a yard leaves a curve.</td></tr>
+    </table></div>
+  </div>
+
+  <h3>What each loco needs</h3>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <tr><th>Loco</th><th>Minimum</th><th>Happy</th></tr>
+      <tr><td>Y class, T class</td><td class="num">438</td><td class="num">505</td></tr>
+      <tr><td>A, B, N, X class</td><td class="num">438</td><td class="num">600</td></tr>
+      <tr><td>G class, AN class (six axle)</td><td class="num">505</td><td class="num">600+</td></tr>
+      <tr><td>Flying Scotsman</td><td class="num">438</td><td class="num">600+</td></tr>
+      <tr><td>Long passenger coaches</td><td class="num">505</td><td class="num">600+</td></tr>
+    </table></div>
+    <p class="muted" style="margin:10px 0 0">Minimum is what the maker says it survives. Happy is where it looks right and stops derailing at speed.</p>
+  </div>
+
+  <div class="card warn small">
+    <b>Two rules that save grief.</b> Put a straight of at least 150 mm between two curves going opposite ways. Widen track centres to 55–60 mm on curves so long coaches don't kiss.
+  </div>
+</section>
+
+<!-- ============ CALCULATORS ============ -->
+<section class="page" id="p-calc">
+  <h2>Calculators</h2>
+
+  <details open>
+    <summary>Flex track for a curve</summary>
+    <div class="body">
+      <div class="row">
+        <div><label for="fxR">Radius, mm</label><input type="number" id="fxR" inputmode="numeric" value="600"></div>
+        <div><label for="fxA">Angle, degrees</label><input type="number" id="fxA" inputmode="numeric" value="90"></div>
+      </div>
+      <div class="result" id="fxOut"></div>
+      <p class="muted small" style="margin-top:8px">One flex length is 914 mm. Always cut the inner rail shorter on a curve, it ends up longer.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Grade, how steep is too steep</summary>
+    <div class="body">
+      <div class="row">
+        <div><label for="grRise">Rise, mm</label><input type="number" id="grRise" inputmode="numeric" value="90"></div>
+        <div><label for="grRun">Run, mm</label><input type="number" id="grRun" inputmode="numeric" value="4500"></div>
+      </div>
+      <label for="grCurve">On a curve? Radius in mm, or leave blank</label>
+      <input type="number" id="grCurve" inputmode="numeric" placeholder="e.g. 600">
+      <div class="result" id="grOut"></div>
+      <div class="tablewrap" style="margin-top:12px"><table>
+        <tr><th>Grade</th><th>Meaning</th></tr>
+        <tr><td class="num">up to 2%</td><td>Main line. Any loco pulls a sensible train.</td></tr>
+        <tr><td class="num">2 to 3%</td><td>Short trains and branch lines. Scotsman with four coaches starts to slip.</td></tr>
+        <tr><td class="num">3 to 4%</td><td>A couple of wagons and a small loco. Avoid.</td></tr>
+        <tr><td class="num">over 4%</td><td>No.</td></tr>
+      </table></div>
+      <p class="muted small" style="margin-top:8px">A grade on a curve behaves steeper. The calculator adds the standard curve penalty. Ease in and out over 300–500 mm or long locos lift a wheel. A flyover needs 90 mm of clearance, which at 2% is 4.5 m of climb.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Trestle bents</summary>
+    <div class="body">
+      <div class="row">
+        <div><label for="trSpan">Span, mm</label><input type="number" id="trSpan" inputmode="numeric" value="600"></div>
+        <div><label for="trDepth">Deepest point, mm</label><input type="number" id="trDepth" inputmode="numeric" value="90"></div>
+      </div>
+      <div class="row">
+        <div><label for="trSpace">Bent spacing, mm</label><input type="number" id="trSpace" inputmode="numeric" value="50"></div>
+        <div><label for="trShape">Gully shape</label><select id="trShape"><option value="u">Rounded U</option><option value="v">Sharp V</option><option value="flat">Flat bottom</option></select></div>
+      </div>
+      <div class="result" id="trOut"></div>
+      <p class="muted small" style="margin-top:8px">Real Victorian trestles used bents about 14 to 16 feet apart, which is 50 mm in HO. Heights listed are bent top to gully floor, so add the footing.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Platform length</summary>
+    <div class="body">
+      <div class="row">
+        <div><label for="plLoco">Loco length, mm</label><input type="number" id="plLoco" inputmode="numeric" value="290"></div>
+        <div><label for="plN">Coaches</label><input type="number" id="plN" inputmode="numeric" value="4"></div>
+      </div>
+      <label for="plCoach">Coach length, mm</label><input type="number" id="plCoach" inputmode="numeric" value="270">
+      <div class="result" id="plOut"></div>
+      <p class="muted small" style="margin-top:8px">Scotsman with tender is about 290 mm. A V/Line N set carriage is about 270 mm. Hornby Mk1 coaches 270 mm. Platform edge 25 mm from track centre on straights, 30 mm plus on curves, 12 mm above the rail.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Track centres and clearances</summary>
+    <div class="body">
+      <ul class="tight">
+        <li><b>Parallel tracks, straight:</b> 50 mm centre to centre. 52 mm if long coaches.</li>
+        <li><b>Parallel tracks, curved:</b> 55 mm at 600 mm radius, 60 mm at 438 mm.</li>
+        <li><b>Flyover:</b> 90 mm railhead to railhead including the roadbed, so about 75 mm of daylight under a girder.</li>
+        <li><b>Tunnel mouth:</b> 60 mm wide, 75 mm high for a single track. Double the width plus 10 for two.</li>
+        <li><b>Platform edge:</b> 25 mm from track centre, 12 mm up.</li>
+        <li><b>Reach:</b> 750 mm is the most anyone reaches comfortably across a board. The operator well solves this.</li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<!-- ============ LOCOS ============ -->
+<section class="page" id="p-locos">
+  <h2>Choosing the locos</h2>
+  <div class="card tint">
+    <p style="margin:0"><b>The rule:</b> two or three locos, each with a job. A loco doesn't get a slot until you can name the train it pulls.</p>
+  </div>
+
+  <h3>Pick a theme first</h3>
+  <div class="card">
+    <select id="theme">
+      <option value="">Choose a theme…</option>
+      <option value="vline88">1988 V/Line, orange and grey. Scotsman on tour, legitimately.</option>
+      <option value="nr90s">1990s National Rail. AN class era, Scotsman as a heritage special.</option>
+      <option value="vr70s">1970s VR blue and gold. Classic Victorian, no Scotsman story.</option>
+    </select>
+    <div id="themeNote" class="notice" style="display:none"></div>
+  </div>
+
+  <h3>The slots</h3>
+  <div class="card" id="slots">
+    <div class="slot" data-slot="passenger"><div class="name">Passenger</div><div class="who muted">Empty. Tap a loco below.</div><input type="text" class="train" placeholder="Name the train it pulls" data-store="train-passenger"></div>
+    <div class="slot" data-slot="goods"><div class="name">Goods</div><div class="who muted">Empty. Tap a loco below.</div><input type="text" class="train" placeholder="Name the train it pulls" data-store="train-goods"></div>
+    <div class="slot" data-slot="yard"><div class="name">Yard shunter</div><div class="who muted">Empty. Tap a loco below.</div><input type="text" class="train" placeholder="What it shunts" data-store="train-yard"></div>
+    <div class="slot" data-slot="special"><div class="name">Special, if allowed</div><div class="who muted">Empty. Tap a loco below.</div><input type="text" class="train" placeholder="Name the train it pulls" data-store="train-special"></div>
+    <p class="muted small" style="margin:10px 0 0">Saves on this phone. Tap a filled slot to clear it.</p>
+  </div>
+
+  <h3>Candidates</h3>
+  <div id="locoList"></div>
+  <p class="muted small">Prices are rough, in AUD, for the sound-fitted version where one exists. Lengths are over buffers or couplers. Approximate.</p>
+
+  <div class="card warn small">
+    <b>Buying stance.</b> Factory DCC sound where offered. Current production over secondhand. The Hornby main-range Scotsman, not the Railroad one. Not the cheapest, not expensive for its own sake.
+  </div>
+</section>
+
+<!-- ============ SHOPPING ============ -->
+<section class="page" id="p-shop">
+  <h2>Shopping list</h2>
+  <p class="muted small">Tick as bought, change quantities. Saves on this phone. Leads with the version that runs best, budget version noted.</p>
+
+  <h3>Track and control</h3>
+  <div class="card" id="shop1"></div>
+  <h3>Wiring</h3>
+  <div class="card" id="shop2"></div>
+  <h3>Tools</h3>
+  <div class="card" id="shop3"></div>
+  <h3>Scenery starter</h3>
+  <div class="card" id="shop4"></div>
+
+  <h3>Where to buy</h3>
+  <div class="card">
+    <ul class="clean">
+      <li><b>Australian Modeller</b> Peco track, points, tools. Online. <span class="muted">australianmodeller.com.au</span></li>
+      <li><b>Auscision</b> Victorian locos and wagons. Online. <span class="muted">auscisionmodels.com.au</span></li>
+      <li><b>Hearns Hobbies</b> Melbourne, Flinders St. Walk in and ask.</li>
+      <li><b>Walker Models</b> Laser-cut Australian buildings. <span class="muted">walkermodels.com</span></li>
+      <li><b>Bunnings</b> Timber, sample pot paints, PVA, plaster, spray adhesive.</li>
+    </ul>
+  </div>
+  <div class="card warn small">
+    <b>Looks right, don't buy.</b> N scale or O gauge. Märklin. Code 75 track. Locos marked DC only with no socket. Boxed train sets.
+  </div>
+</section>
+
+<!-- ============ PLAN CHECK ============ -->
+<section class="page" id="p-plan">
+  <h2>Check the plan</h2>
+  <p>Two ways to get your SCARM design checked. The parts list works right now on this phone. The full design check needs the file itself.</p>
+
+  <h3>1. Parts list, checked here</h3>
+  <div class="card">
+    <p class="small">In SCARM: <b>Tools → Parts list</b>. It opens in your browser. Save that page, then load it here.</p>
+    <div class="drop" id="drop">
+      <input type="file" id="fileIn" accept=".html,.htm,.txt,.csv,.scarm">
+      <p style="margin:0 0 8px">Load the parts list</p>
+      <button class="secondary" onclick="document.getElementById('fileIn').click()">Choose file</button>
+    </div>
+    <div id="partsOut"></div>
+  </div>
+
+  <h3>2. Full design check</h3>
+  <div class="card">
+    <p class="small">Every track end that isn't joined. Ends that nearly meet. Track no train can reach. Kinks, S-curves, tight radii, steep grades, track too close to the edge. Marked up on a picture of the plan with numbers.</p>
+    <p class="small">This needs the <b>.scarm file</b>. Email it to Matt and the report comes back here on the page.</p>
+    <a class="btn" href="mailto:matt_cornock@outlook.com?subject=JMC%3A%20SCARM%20file%20for%20checking&body=Attached%20is%20the%20.scarm%20file.%0A%0AAnything%20in%20particular%20to%20look%20at%3A%0A">Email the SCARM file</a>
+  </div>
+
+  <h3>The train stopped and I don't know why</h3>
+  <div class="card">
+    <ol class="steps">
+      <li>Click the piece before where it stopped. Note the end point coordinates.</li>
+      <li>Click the piece after. Note the start point.</li>
+      <li>If they differ by even 0.1 mm, they aren't joined. Drag one onto the other until SCARM snaps it.</li>
+      <li>Check the angle too. Same position but different angle is a kink, and the train may crawl through it in SCARM and derail on the table.</li>
+      <li>Still stuck: email the file. That's exactly what the design check finds automatically.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ SCENERY ============ -->
+<section class="page" id="p-scenery">
+  <h2>How to build the scenery</h2>
+  <p class="muted small">Recipes from the layouts you liked at the show. Order matters more than the products.</p>
+
+  <details open>
+    <summary>Bush scrub, the easy one</summary>
+    <div class="body">
+      <ol class="steps">
+        <li><b>Shape:</b> crumpled newspaper or foam offcuts, plaster cloth over the top. Or Sculptamold spread like porridge.</li>
+        <li><b>Paint it dirt:</b> Bunnings sample pot, mid brown. Dry-brush a lighter tan on the cutting faces. Paint everything before any green goes down.</li>
+        <li><b>Ground:</b> brush on watered-down PVA, sprinkle fine turf in two greens.</li>
+        <li><b>The bushy bit:</b> clump foliage pressed into wet PVA in patches. Mixed greens plus a little olive for dead stuff. This is most of the look.</li>
+        <li><b>Logs and dead trees:</b> twigs from the garden. Snap, drop in. Free.</li>
+        <li><b>Fix it:</b> spray 50/50 PVA and water with a drop of dish soap, or cheap hairspray. Nothing moves again.</li>
+      </ol>
+      <figure style="margin-top:12px"><img src="img/scrub.jpg" alt="Scrub scenery" loading="lazy"><figcaption>The target. Clump foliage over painted dirt, twigs for logs.</figcaption></figure>
+    </div>
+  </details>
+
+  <details>
+    <summary>Strata rock cutting</summary>
+    <div class="body">
+      <ol class="steps">
+        <li>Build the bank shape, plaster cloth over it.</li>
+        <li>Trowel on 5 to 10 mm of Sculptamold or plaster, rough.</li>
+        <li>Wait until leather-hard, 20 to 40 minutes. Drag an old hacksaw blade, wire brush or fork horizontally along the face, following the curve. Tilt it so the layers dip. Stab a few vertical cracks with a screwdriver.</li>
+        <li>Dry, then paint: mid grey-brown base, black-brown wash thinned like tea, dry-brush pale bone across the ridges.</li>
+        <li>Turf into the crevices and over the top lip so grass overhangs.</li>
+      </ol>
+      <p class="small" style="margin-top:8px"><b>Alternative:</b> stack 5 mm foam sheets, carve with a knife, rake with a wire brush. Lighter, better for tall cuttings. <b>Boulders:</b> crumple foil, press into wet plaster, peel.</p>
+      <figure style="margin-top:12px"><img src="img/strata.jpg" alt="Strata rock cutting" loading="lazy"><figcaption>Scored plaster, then washes.</figcaption></figure>
+    </div>
+  </details>
+
+  <details>
+    <summary>Gum trees</summary>
+    <div class="body">
+      <ol class="steps">
+        <li>Armature: sea foam (a dried plant, sold in hobby shops) or twisted florist wire for bigger trees.</li>
+        <li>Paint trunks grey-white, then a thin rust or brown wash streaked down. Gum bark, not pine.</li>
+        <li>Spray with hairspray or dilute PVA, dust with fine foliage in a blue-green. Sparse. Gums are see-through.</li>
+        <li>Plant in a drilled hole with a dab of PVA. Lean a few. Nothing in the bush is vertical.</li>
+      </ol>
+      <p class="small" style="margin-top:8px">Budget a couple of hours per big tree. A 4.7 m board wants dozens, so start early and make them in batches while watching TV.</p>
+      <figure style="margin-top:12px"><img src="img/trestle.jpg" alt="Trestle bridge with gum trees" loading="lazy"><figcaption>The trestle and the trees you both liked. Puffing Billy style.</figcaption></figure>
+    </div>
+  </details>
+
+  <details>
+    <summary>Timber trestle</summary>
+    <div class="body">
+      <ol class="steps">
+        <li>Use the trestle calculator for bent count and heights.</li>
+        <li>Bents are printed on Matt's printer or built from stripwood on a paper jig, all identical except height.</li>
+        <li>Stain everything grey-brown before assembly. India ink in isopropyl alcohol, one coat.</li>
+        <li>Glue bents to two stringers on a flat board, then set the whole bridge into the gully. Track sits on the stringers, no ballast.</li>
+        <li>Drop the baseboard under the river 80 to 100 mm so there's a real gully. Do this before the board is finished.</li>
+      </ol>
+    </div>
+  </details>
+
+  <details>
+    <summary>Stone retaining wall</summary>
+    <div class="body">
+      <ol class="steps">
+        <li>Panels are printed flat, face up, with the capping stone as a separate strip. Any length, all matching.</li>
+        <li>Grey primer, then dry-brush tan.</li>
+        <li>Pick out a third of the stones one at a time in rust, blue-grey and buff. This is what sells it.</li>
+        <li>Dark wash over the lot. Wipe the high spots.</li>
+        <li>Ivy is clump foliage teased thin and glued down the joints.</li>
+      </ol>
+      <figure style="margin-top:12px"><img src="img/wall.jpg" alt="Stone retaining wall" loading="lazy"><figcaption>Stepped panels with pilasters. Printable.</figcaption></figure>
+    </div>
+  </details>
+
+  <details>
+    <summary>Kits and the tools they need</summary>
+    <div class="body">
+      <p class="small"><b>Craftsman wood kits</b> like the wharf you liked: Bar Mills, FOS Scale, Campbell for American; Walker Models and Outback Model Company for Australian. Start with a small shed kit to learn the technique.</p>
+      <p class="small"><b>Tools:</b> hobby knife and a box of blades, cutting mat, steel rule, small square, two pairs of tweezers, sanding sticks, pin vise with 0.5–1 mm drills, a gluing jig or right-angle clamps, razor saw, magnifier visor.</p>
+      <p class="small"><b>Three glues:</b> aliphatic wood glue for structure, thin CA with accelerator for details, canopy glue for windows.</p>
+      <p class="small"><b>Finishing:</b> prime wood light grey before assembly or it warps. India ink in isopropyl for the weathering wash. Weathering powders for grime. Two-part epoxy for water.</p>
+      <p class="small"><b>The printer does:</b> pilings, lobster pots, buoys, barrels, crates, boat hulls, wall panels, trestle bents, and eventually a Victorian weatherboard station.</p>
+      <figure style="margin-top:12px"><img src="img/wharf.jpg" alt="Craftsman wharf kit" loading="lazy"><figcaption>Laser-cut wood, and hours of finishing. Worth it.</figcaption></figure>
+    </div>
+  </details>
+
+  <details>
+    <summary>Station</summary>
+    <div class="body">
+      <ul class="tight">
+        <li>Platform length is the first number. Scotsman plus four coaches needs about 1.4 m. Use the calculator.</li>
+        <li>12 mm above the rail, edge 25 mm from track centre, 30 mm plus on curves.</li>
+        <li>Building: Walker Models Bowman station kit, a Scalescenes card kit printed at home, or a printed VR timber station.</li>
+        <li>The dressing sells it: fence, two lamps, a bench, nameboard, six figures, posters.</li>
+        <li>VR means red brick or timber with a corrugated roof, not British stone.</li>
+      </ul>
+      <figure style="margin-top:12px"><img src="img/station.jpg" alt="Card kit station" loading="lazy"><figcaption>Card kit, O gauge, but the dressing is the lesson.</figcaption></figure>
+    </div>
+  </details>
+</section>
+
+<!-- ============ REFERENCE ============ -->
+<section class="page" id="p-ref">
+  <h2>From the show</h2>
+  <p class="muted small">What you pointed at, and why it matters.</p>
+  <figure><img src="img/grain-train.jpg" alt="VR grain train" loading="lazy"><figcaption><b>VR blue and gold grain train.</b> T or Y class, grey hoppers, red Z van. A great first consist: one loco, six hoppers, a van.</figcaption></figure>
+  <figure><img src="img/trestle.jpg" alt="Timber trestle" loading="lazy"><figcaption><b>Curved timber trestle.</b> The one to copy. Monbulk Creek on the Puffing Billy line is the real thing, 40 minutes away.</figcaption></figure>
+  <figure><img src="img/viaduct.jpg" alt="Steel viaduct on stone piers" loading="lazy"><figcaption><b>Steel lattice viaduct on bluestone piers.</b> Taradale style. Harder than the trestle and needs a deeper valley. Parked.</figcaption></figure>
+  <figure><img src="img/scrub.jpg" alt="Scrub" loading="lazy"><figcaption><b>Scrub.</b> Clump foliage, twigs, painted dirt. Recipe on the Scenery tab.</figcaption></figure>
+  <figure><img src="img/wall.jpg" alt="Retaining wall" loading="lazy"><figcaption><b>Stone retaining wall.</b> Stepped panels, printable.</figcaption></figure>
+  <figure><img src="img/strata.jpg" alt="Strata cutting" loading="lazy"><figcaption><b>Strata cutting.</b> Scored plaster. Recipe on the Scenery tab.</figcaption></figure>
+  <figure><img src="img/wharf.jpg" alt="Wharf kit" loading="lazy"><figcaption><b>Craftsman wharf kit.</b> Laser-cut wood. The tools list is on the Scenery tab.</figcaption></figure>
+  <figure><img src="img/station.jpg" alt="Station" loading="lazy"><figcaption><b>Station.</b> Card kit with proper dressing. Ours will be Victorian, not British stone.</figcaption></figure>
+  <figure><img src="img/a-class.jpg" alt="Auscision A class" loading="lazy"><figcaption><b>Auscision A class, V/Line Freight.</b> Same loco in four liveries. Passenger or goods.</figcaption></figure>
+  <figure><img src="img/an-ghan.jpg" alt="AN class Ghan" loading="lazy"><figcaption><b>AN class, The Ghan.</b> Hauled The Overland through Victoria. Long, six axles, keep it on the main.</figcaption></figure>
+  <figure><img src="img/an-nr.jpg" alt="AN class National Rail" loading="lazy"><figcaption><b>AN class, National Rail.</b> The freight livery of the same loco. A matched pair covers both jobs.</figcaption></figure>
+  <figure><img src="img/g-class.jpg" alt="G class flyer" loading="lazy"><figcaption><b>G class, new 2026 tooling.</b> $310 DC, $445 with sound, pre-order. New tooling usually lands a year or more after the flyer.</figcaption></figure>
+  <figure><img src="img/plan.jpg" alt="SCARM plan" loading="lazy"><figcaption><b>The plan.</b> JMC Build 1, Stage 3.</figcaption></figure>
+</section>
+
+</main>
+
+<div class="more-menu" id="moreMenu">
+  <button data-go="p-plan">Check the plan (SCARM)</button>
+  <button data-go="p-scenery">Scenery recipes</button>
+  <button data-go="p-ref">Photos from the show</button>
+  <button data-go="p-convert">mm ↔ inches</button>
+  <a class="btn secondary" style="margin:8px 20px 6px;display:block" href="mailto:matt_cornock@outlook.com?subject=JMC%3A%20change%20request&body=What%20I%20want%20changed%20or%20added%3A%0A%0A">Email Matt a change</a>
+</div>
+
+<nav class="tabs">
+  <button data-go="p-home" class="on"><span class="ic">🏠</span>Home</button>
+  <button data-go="p-radius"><span class="ic">⤵</span>Radius</button>
+  <button data-go="p-calc"><span class="ic">🧮</span>Calc</button>
+  <button data-go="p-locos"><span class="ic">🚂</span>Locos</button>
+  <button data-go="p-shop"><span class="ic">🛒</span>Shop</button>
+  <button id="moreBtn"><span class="ic">⋯</span>More</button>
+</nav>
+
+<script>
+/* ---------- storage ---------- */
+const S = {
+  get(k, d){ try{ const v = localStorage.getItem('jmc.'+k); return v===null ? d : JSON.parse(v);}catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem('jmc.'+k, JSON.stringify(v)); }catch(e){} }
+};
+document.querySelectorAll('[data-store]').forEach(el=>{
+  const k = el.dataset.store;
+  const v = S.get(k, null);
+  if (v!==null){ if (el.isContentEditable) el.textContent = v; else el.value = v; }
+  el.addEventListener('input', ()=> S.set(k, el.isContentEditable ? el.textContent : el.value));
+});
+
+/* ---------- navigation ---------- */
+const pages = [...document.querySelectorAll('section.page')];
+const tabs = [...document.querySelectorAll('nav.tabs button[data-go]')];
+const more = document.getElementById('moreMenu');
+function go(id){
+  pages.forEach(p=>p.classList.toggle('active', p.id===id));
+  tabs.forEach(t=>t.classList.toggle('on', t.dataset.go===id));
+  more.classList.remove('open');
+  window.scrollTo(0,0);
+  S.set('page', id);
+}
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click', ()=>go(b.dataset.go)));
+document.getElementById('moreBtn').addEventListener('click', ()=>more.classList.toggle('open'));
+go(S.get('page','p-home'));
+
+/* ---------- convert ---------- */
+const mm = document.getElementById('mm'), inch = document.getElementById('inch'), convOut = document.getElementById('convOut');
+function fmt(n, d=1){ return Number(n).toLocaleString('en-AU',{maximumFractionDigits:d}); }
+mm.addEventListener('input', ()=>{ const v = parseFloat(mm.value); if (isNaN(v)){convOut.textContent='Type in either box.';return;} inch.value = (v/25.4).toFixed(2); convOut.innerHTML = `<b>${fmt(v)} mm</b> = <b>${fmt(v/25.4,2)} in</b>` + feet(v/25.4); });
+inch.addEventListener('input', ()=>{ const v = parseFloat(inch.value); if (isNaN(v)){convOut.textContent='Type in either box.';return;} mm.value = (v*25.4).toFixed(1); convOut.innerHTML = `<b>${fmt(v,2)} in</b> = <b>${fmt(v*25.4)} mm</b>` + feet(v); });
+function feet(inches){ if (inches < 12) return ''; const f = Math.floor(inches/12), i = inches - f*12; return ` <span class="muted">(${f} ft ${fmt(i,1)} in)</span>`; }
+
+/* ---------- radius ---------- */
+const radIn = document.getElementById('radIn'), radOut = document.getElementById('radOut');
+radIn.addEventListener('input', ()=>{
+  const r = parseFloat(radIn.value); if (isNaN(r)||r<=0){ radOut.textContent='Type a radius.'; return; }
+  let cls='', txt='';
+  if (r < 371){ cls='red'; txt='Too tight for anything on this layout.'; }
+  else if (r < 438){ cls='red'; txt='Four-wheel wagons and tank engines only. Below the layout minimum.'; }
+  else if (r < 505){ cls='amber'; txt='Runs, but long locos and coaches will look wrong and may bind. Yard only.'; }
+  else if (r < 600){ cls='amber'; txt='Safe for nearly everything. Fine for the yard throat, tight for the main.'; }
+  else if (r < 900){ cls=''; txt='Good. Main line quality. Six-axle diesels and the Scotsman are happy.'; }
+  else { cls=''; txt='Excellent. This is what real railways look like in miniature.'; }
+  radOut.innerHTML = `<span class="verdict ${cls}">${r} mm · ${fmt(r/25.4,1)} in</span><div style="margin-top:6px">${txt}</div>`;
+});
+
+/* ---------- calculators ---------- */
+function bind(ids, fn){ ids.forEach(id=>document.getElementById(id).addEventListener('input', fn)); fn(); }
+bind(['fxR','fxA'], ()=>{
+  const R = +document.getElementById('fxR').value, A = +document.getElementById('fxA').value;
+  const out = document.getElementById('fxOut');
+  if (!(R>0&&A>0)){ out.textContent='Enter radius and angle.'; return; }
+  const arc = R*A*Math.PI/180, n = Math.ceil(arc/914), chord = 2*R*Math.sin(A*Math.PI/360);
+  const inner = (R-8.25)*A*Math.PI/180, outer = (R+8.25)*A*Math.PI/180;
+  out.innerHTML = `Arc along the centreline: <b>${fmt(arc,0)} mm</b><br>Flex lengths to cut from: <b>${n}</b> (${fmt(n*914-arc,0)} mm left over)<br>Straight-line chord: ${fmt(chord,0)} mm<br><span class="muted small">Outer rail ${fmt(outer,0)} mm, inner rail ${fmt(inner,0)} mm. That ${fmt(outer-inner,0)} mm difference is why the inner rail needs trimming.</span>`;
+});
+bind(['grRise','grRun','grCurve'], ()=>{
+  const rise = +document.getElementById('grRise').value, run = +document.getElementById('grRun').value, R = +document.getElementById('grCurve').value;
+  const out = document.getElementById('grOut');
+  if (!(run>0)){ out.textContent='Enter rise and run.'; return; }
+  const g = rise/run*100;
+  const pen = R>0 ? 32/(R/25.4) : 0; // John Armstrong's curve compensation: 32 / radius in inches
+  const eff = g + pen;
+  let cls = eff<=2 ? '' : eff<=3 ? 'amber' : 'red';
+  let word = eff<=2 ? 'Main line, fine.' : eff<=3 ? 'Short trains only.' : eff<=4 ? 'A couple of wagons. Avoid.' : 'No.';
+  out.innerHTML = `Grade: <b>${fmt(g,2)}%</b>` + (R>0 ? ` &nbsp;on a ${R} mm curve feels like <b>${fmt(eff,2)}%</b>` : '') + `<br><span class="verdict ${cls}">${word}</span><br><span class="muted small">Length needed to climb 90 mm at 2%: 4,500 mm. At 3%: 3,000 mm.</span>`;
+});
+bind(['trSpan','trDepth','trSpace','trShape'], ()=>{
+  const L = +document.getElementById('trSpan').value, D = +document.getElementById('trDepth').value, s = +document.getElementById('trSpace').value, shape = document.getElementById('trShape').value;
+  const out = document.getElementById('trOut');
+  if (!(L>0&&D>0&&s>0)){ out.textContent='Enter span, depth and spacing.'; return; }
+  const n = Math.floor(L/s) - 1; if (n<1){ out.textContent='Span too short for that spacing.'; return; }
+  const hs = [];
+  for (let i=1;i<=n;i++){ const x = i*s/L; let f; if (shape==='u') f = Math.sin(Math.PI*x); else if (shape==='v') f = 1 - Math.abs(2*x-1); else f = (x<0.15||x>0.85) ? Math.min(x,1-x)/0.15 : 1; hs.push(Math.round(D*f)); }
+  out.innerHTML = `Bents: <b>${n}</b> at ${s} mm centres<br>Heights, mm: <span class="mono" style="display:inline;padding:2px 6px">${hs.join(' · ')}</span><br><span class="muted small">Tallest ${Math.max(...hs)} mm. Stringers span ${L} mm total.</span>`;
+});
+bind(['plLoco','plN','plCoach'], ()=>{
+  const l = +document.getElementById('plLoco').value, n = +document.getElementById('plN').value, c = +document.getElementById('plCoach').value;
+  const total = l + n*c + 60;
+  document.getElementById('plOut').innerHTML = `Platform length: <b>${fmt(total,0)} mm</b> <span class="muted">(${fmt(total/25.4,0)} in)</span><br><span class="muted small">Loco plus ${n} coaches plus 60 mm so nothing hangs off the end.</span>`;
+});
+
+/* ---------- locos ---------- */
+const LOCOS = [
+  {id:'scotsman', name:'Flying Scotsman 60103', maker:'Hornby, main range', livery:'BR Brunswick green', era:'Toured Australia 1988–89, heritage since', jobs:['passenger','special'], len:290, minR:438, happyR:600, price:'$450–500 sound', note:'The dream one. Long, keep it off the small points. Pulls LNER teak or BR maroon coaches.'},
+  {id:'aclass', name:'A class', maker:'Auscision', livery:'V/Line orange & grey, V/Line Freight, or V/Line red', era:'1984 onwards', jobs:['passenger','goods'], len:215, minR:438, happyR:600, price:'~$400 sound', note:'Bulldog nose, four axles, does either job. Four liveries to choose from.'},
+  {id:'nclass', name:'N class', maker:'Auscision', livery:'V/Line orange & grey', era:'1985 onwards', jobs:['passenger'], len:215, minR:438, happyR:600, price:'~$400 sound', note:'The V/Line passenger loco. Pair it with a set of N carriages.'},
+  {id:'gclass', name:'G class', maker:'Auscision, new 2026 tooling', livery:'V/Line orange & grey and 11 others', era:'1984 onwards', jobs:['goods'], len:255, minR:505, happyR:600, price:'$445 sound, pre-order', note:'Big six-axle freight loco. Pre-order, expect a year or more before it lands.'},
+  {id:'xclass', name:'X class, early (X31–X36)', maker:'Auscision', livery:'V/Line orange, or VR blue & gold', era:'1966 onwards', jobs:['goods'], len:210, minR:438, happyR:600, price:'~$400 sound', note:'Hood unit with the front walkway you liked. Goods and grain.'},
+  {id:'anclass', name:'AN class', maker:'Auscision', livery:'The Ghan red, or National Rail orange', era:'1993 onwards', jobs:['passenger','goods'], len:255, minR:505, happyR:600, price:'~$400 sound', note:'Hauled The Overland through Victoria. A matched pair in the two liveries covers both jobs.'},
+  {id:'yclass', name:'Y class', maker:'Auscision', livery:'VR blue & gold, or V/Line orange', era:'1963 onwards', jobs:['yard'], len:150, minR:438, happyR:505, price:'~$300 sound', note:'The shunter. Hood unit too. Small enough for any point on the layout.'},
+  {id:'tclass', name:'T class', maker:'Powerline or Austrains, secondhand', livery:'VR blue & gold, or V/Line orange', era:'1955 onwards', jobs:['yard','goods'], len:165, minR:438, happyR:505, price:'~$250 no sound', note:'Classic hood unit. Only secondhand right now, so lower on the list.'},
+  {id:'bclass', name:'B class', maker:'Auscision', livery:'VR blue & gold', era:'1952 onwards', jobs:['passenger','goods'], len:215, minR:438, happyR:600, price:'~$400 sound', note:'The original bulldog. If the theme drifts earlier, this is the loco.'},
+];
+const THEMES = {
+  vline88: {note:'Late 1980s Victoria. Orange and grey V/Line. The Scotsman ran out of Melbourne on tour in this window, so it belongs. Suggested: N class passenger, A or X class goods, Y class yard, Scotsman special.', pick:['nclass','aclass','xclass','yclass','scotsman','gclass']},
+  nr90s: {note:'1990s. National Rail on the interstate lines, V/Line Freight on the rest. Suggested: AN class in The Ghan for passenger, AN in National Rail or A class V/Line Freight for goods, Y class yard. Scotsman becomes a heritage special with no historical excuse, which plenty of people run and nobody minds.', pick:['anclass','aclass','gclass','yclass','scotsman']},
+  vr70s: {note:'1970s Victorian Railways, blue and gold everywhere. Suggested: B class passenger, X or T class goods, Y class yard. No Scotsman story, it was in England.', pick:['bclass','xclass','tclass','yclass']},
+};
+const slotsEl = document.getElementById('slots'), listEl = document.getElementById('locoList'), themeEl = document.getElementById('theme'), themeNote = document.getElementById('themeNote');
+let slots = S.get('slots', {});
+function renderSlots(){
+  slotsEl.querySelectorAll('.slot').forEach(sl=>{
+    const id = slots[sl.dataset.slot]; const l = LOCOS.find(x=>x.id===id);
+    sl.classList.toggle('filled', !!l);
+    sl.querySelector('.who').innerHTML = l ? `<b>${l.name}</b> <span class="muted">· ${l.maker}</span>` : 'Empty. Tap a loco below.';
+    sl.querySelector('.who').className = 'who' + (l?'':' muted');
+  });
+}
+slotsEl.querySelectorAll('.slot').forEach(sl=>sl.querySelector('.who').addEventListener('click', ()=>{ if (slots[sl.dataset.slot]){ delete slots[sl.dataset.slot]; S.set('slots', slots); renderSlots(); renderLocos(); } }));
+function renderLocos(){
+  const t = THEMES[themeEl.value]; const order = t ? t.pick : LOCOS.map(l=>l.id);
+  const rest = LOCOS.map(l=>l.id).filter(id=>!order.includes(id));
+  listEl.innerHTML = [...order, ...rest].map(id=>{
+    const l = LOCOS.find(x=>x.id===id); const inSlot = Object.entries(slots).find(([k,v])=>v===id);
+    const dim = t && !t.pick.includes(id) ? ' style="opacity:.55"' : '';
+    return `<div class="loco"${dim}><div class="t">${l.name} ${inSlot?`<span class="pill">${inSlot[0]}</span>`:''}</div>
+      <div class="meta">${l.maker} · ${l.livery} · ${l.era}</div>
+      <div class="small">${l.note}</div>
+      <div class="small muted" style="margin:4px 0 8px">${l.len} mm long · min ${l.minR} mm, happy ${l.happyR} mm · ${l.price}</div>
+      <div>${l.jobs.map(j=>`<button class="small secondary" data-assign="${j}" data-id="${l.id}">Put in ${j}</button>`).join(' ')}</div></div>`;
+  }).join('');
+  listEl.querySelectorAll('[data-assign]').forEach(b=>b.addEventListener('click', ()=>{ slots[b.dataset.assign] = b.dataset.id; S.set('slots', slots); renderSlots(); renderLocos(); document.getElementById('slots').scrollIntoView({behavior:'smooth'}); }));
+}
+themeEl.value = S.get('theme','');
+themeEl.addEventListener('change', ()=>{ S.set('theme', themeEl.value); showTheme(); renderLocos(); });
+function showTheme(){ const t = THEMES[themeEl.value]; themeNote.style.display = t ? 'block' : 'none'; themeNote.textContent = t ? t.note : ''; }
+showTheme(); renderSlots(); renderLocos();
+
+/* ---------- shopping ---------- */
+const SHOP = {
+  shop1: [
+    ['Peco SL-100 flex track, Code 100, box of 25', 3, 'About $200 a box. Three boxes covers the plan with spare.'],
+    ['Peco medium radius points, Electrofrog or Unifrog (SL-E95 right, SL-E96 left)', 18, 'About $42 each. Count from the SCARM parts list. Budget: Insulfrog SL-95/96, a few dollars less, slightly rougher over the frog.'],
+    ['Peco small radius points for the yard (SL-E91, SL-E92)', 4, 'Only where a medium won\'t fit.'],
+    ['Peco curved point (SL-E86, SL-E87)', 1, 'If the yard leaves a curve.'],
+    ['NCE Power Cab DCC starter', 1, 'About $330. Budget alternative: Digitrax Zephyr Express.'],
+    ['DCC auto-reverser (Digitrax AR1 or DCC Concepts)', 1, 'About $60. For the bottom-left loop.'],
+    ['Peco insulated rail joiners SL-11, pack', 2, 'For the reversing loop and any frog isolation.'],
+    ['Peco metal rail joiners SL-10, pack', 4, ''],
+    ['Peco track pins SL-14', 1, 'For final laying. Clips do the job until then.'],
+  ],
+  shop2: [
+    ['Bus wire, 2.5 mm² red and black, 10 m each', 1, 'Auto or speaker cable is fine.'],
+    ['Dropper wire, 0.5 mm² red and black, 20 m each', 1, 'One pair per length of track.'],
+    ['Suitcase connectors or a soldering iron and solder', 1, 'Soldering is neater and cheaper over 100 joints.'],
+    ['21-pin and 8-pin decoders if any loco arrives DCC Ready', 0, 'About $40 each. Zero if everything is bought sound-fitted.'],
+  ],
+  shop3: [
+    ['Xuron track cutters', 1, 'Flush cut. The one tool that makes flex track pleasant.'],
+    ['Needle files, fine', 1, 'Dress every cut rail end.'],
+    ['Tracksetta gauges, 600 and 914 mm', 1, 'Hold the curve while you pin. Or the printed clips.'],
+    ['Hobby knife, blades, cutting mat, steel rule, small square', 1, ''],
+    ['Magnifier visor', 1, ''],
+    ['Pin vise and 0.5–1 mm drills', 1, ''],
+    ['Three glues: aliphatic wood glue, thin CA plus accelerator, canopy glue', 1, ''],
+  ],
+  shop4: [
+    ['Sculptamold 1.4 kg', 2, ''],
+    ['Plaster cloth roll', 2, ''],
+    ['Fine turf, two greens', 2, ''],
+    ['Clump foliage, mixed greens and olive', 3, 'This is most of the scrub look.'],
+    ['Sea foam tree armatures, pack', 2, 'Gum trees.'],
+    ['Fine foliage, blue-green', 2, 'For the gums.'],
+    ['Rock mould, rubber', 1, ''],
+    ['Bunnings sample pots: dirt brown, tan, grey-brown', 3, ''],
+    ['PVA 1 L, dish soap, spray bottle, cheap hairspray', 1, ''],
+    ['Ballast, grey, fine', 2, 'Last job, not first.'],
+  ]
+};
+let bought = S.get('bought', {}), qtys = S.get('qtys', {});
+Object.entries(SHOP).forEach(([sec, items])=>{
+  const el = document.getElementById(sec);
+  el.innerHTML = items.map(([name, q, note], i)=>{ const k = sec+':'+i; const qq = qtys[k] ?? q; return `<div class="check ${bought[k]?'done':''}" data-k="${k}"><input type="checkbox" ${bought[k]?'checked':''}><div class="lbl">${name}${note?`<small>${note}</small>`:''}</div><input type="number" class="qty" value="${qq}" inputmode="numeric" aria-label="quantity"></div>`; }).join('');
+  el.querySelectorAll('.check').forEach(row=>{
+    const k = row.dataset.k;
+    row.querySelector('input[type=checkbox]').addEventListener('change', e=>{ bought[k] = e.target.checked; S.set('bought', bought); row.classList.toggle('done', e.target.checked); });
+    row.querySelector('.qty').addEventListener('input', e=>{ qtys[k] = +e.target.value; S.set('qtys', qtys); });
+  });
+});
+
+/* ---------- parts list check ---------- */
+const PECO = {
+  'SL-100':{what:'Flex track, wooden sleeper', len:914}, 'SL-102':{what:'Flex track, concrete sleeper', len:914},
+  'SL-88':{what:'Large radius point RH', r:1524}, 'SL-89':{what:'Large radius point LH', r:1524},
+  'SL-95':{what:'Medium radius point RH', r:914}, 'SL-96':{what:'Medium radius point LH', r:914},
+  'SL-91':{what:'Small radius point RH', r:610}, 'SL-92':{what:'Small radius point LH', r:610},
+  'SL-97':{what:'Y point, small radius', r:610}, 'SL-86':{what:'Curved point RH', r:762}, 'SL-87':{what:'Curved point LH', r:762},
+  'SL-93':{what:'Long crossing 12°'}, 'SL-94':{what:'Short crossing 24°'}, 'SL-99':{what:'Three-way point', r:610},
+  'ST-200':{what:'Setrack straight 168 mm', len:168}, 'ST-201':{what:'Setrack straight 79 mm', len:79},
+  'ST-220':{what:'Setrack curve R1', r:371}, 'ST-225':{what:'Setrack curve R2', r:438},
+};
+function normCode(s){ const m = s.toUpperCase().match(/\b(SL|ST)[- ]?(E|U)?[- ]?(\d{2,4})\b/); if(!m) return null; return m[1]+'-'+m[3]; }
+document.getElementById('fileIn').addEventListener('change', async e=>{
+  const f = e.target.files[0]; if(!f) return; const out = document.getElementById('partsOut');
+  if (/\.scarm$/i.test(f.name)){ out.innerHTML = `<div class="notice">That's the .scarm file itself. This page can't read it yet. <a href="mailto:matt_cornock@outlook.com?subject=JMC%3A%20SCARM%20file%20for%20checking">Email it to Matt</a> for the full design check.</div>`; return; }
+  const text = await f.text();
+  let rows = [];
+  try {
+    const doc = new DOMParser().parseFromString(text, 'text/html');
+    doc.querySelectorAll('tr').forEach(tr=>{ const cells = [...tr.querySelectorAll('td,th')].map(td=>td.textContent.trim()); if (cells.length) rows.push(cells); });
+    if (!rows.length) rows = text.split(/\r?\n/).map(l=>l.split(/[,;\t]/).map(s=>s.trim()));
+  } catch(err){ rows = text.split(/\r?\n/).map(l=>l.split(/[,;\t]/)); }
+  const found = {}; let unknown = [];
+  rows.forEach(cells=>{
+    const joined = cells.join(' '); const code = normCode(joined); if (!code) return;
+    const qtyCell = cells.map(c=>c.replace(/[^\d.]/g,'')).filter(c=>c && +c>0 && +c<500);
+    const qty = qtyCell.length ? +qtyCell[qtyCell.length-1] : 1;
+    found[code] = (found[code]||0) + qty; if (!PECO[code]) unknown.push(code);
+  });
+  const codes = Object.keys(found);
+  if (!codes.length){ out.innerHTML = `<div class="notice">Couldn't find any Peco part numbers in that file. Make sure it's the page SCARM opened from Tools → Parts list, saved as HTML. Or <a href="mailto:matt_cornock@outlook.com?subject=JMC%3A%20parts%20list">email it to Matt</a>.</div>`; return; }
+  let flexLen = 0, points = 0, minR = Infinity, tight = [];
+  const lines = codes.sort().map(c=>{ const p = PECO[c]||{what:'Not in my table yet'}; const n = found[c]; if (p.len) flexLen += p.len*n; if (p.r){ points += n; minR = Math.min(minR, p.r); if (p.r<914) tight.push(`${n} × ${c} at ${p.r} mm`); } return `<tr><td>${c}</td><td>${p.what}</td><td class="num">${n}</td></tr>`; }).join('');
+  out.innerHTML = `<div class="result" style="margin-top:14px">
+    Points and crossings: <b>${points}</b><br>
+    Flex track: <b>${fmt(flexLen/1000,1)} m</b> → buy <b>${Math.ceil(flexLen/914/25)}</b> box${Math.ceil(flexLen/914/25)===1?'':'es'} of 25, or <b>${Math.ceil(flexLen/914)}</b> lengths<br>
+    ${isFinite(minR) ? `Tightest point radius: <b>${minR} mm</b>` : ''}
+    ${tight.length ? `<div style="margin-top:8px"><span class="verdict amber">Under medium radius</span> ${tight.join(', ')}. Fine in the yard, not on the main.</div>` : `<div style="margin-top:8px"><span class="verdict">No small-radius points</span></div>`}
+    ${unknown.length ? `<div class="muted small" style="margin-top:8px">Not in my table yet: ${[...new Set(unknown)].join(', ')}. Email Matt and they'll be added.</div>` : ''}
+  </div>
+  <div class="tablewrap" style="margin-top:10px"><table><tr><th>Code</th><th>What</th><th>Qty</th></tr>${lines}</table></div>`;
+});
+
+/* ---------- offline ---------- */
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
