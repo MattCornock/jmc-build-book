@@ -173,7 +173,7 @@ ol.steps li{margin:6px 0}
     <figcaption>JMC Build 1, Stage 3. Printed from SCARM 2.0.1.</figcaption>
   </figure>
 
-  <div class="foot">Kept up to date by Matt. <a href="mailto:matt_cornock@outlook.com?subject=JMC%3A%20change%20request">Email a change</a> · Version <span id="ver">1.5</span> · 13 Sep 2026</div>
+  <div class="foot">Kept up to date by Matt. <a href="mailto:matt_cornock@outlook.com?subject=JMC%3A%20change%20request">Email a change</a> · Version <span id="ver">1.6</span> · 13 Sep 2026</div>
 </section>
 
 <!-- ============ CONVERT ============ -->
@@ -699,7 +699,7 @@ ol.steps li{margin:6px 0}
 <!-- ============ SCARM DESIGN REQUEST ============ -->
 <section class="page" id="p-scarm">
   <h2>Request a SCARM design file</h2>
-  <p>Describe a track plan, or a change to the one you have, in your own words. You get back a <b>.scarm file</b> that opens straight in SCARM, plus a picture of it and a note on what was assumed. Then you pull it about in SCARM as usual.</p>
+  <p>Describe a track plan, or a change to the one you have, in your own words. The aim is a <b>.scarm file</b> that opens straight in SCARM, plus a picture of it and a note on what was assumed. See the note below on where that stands. Then you pull it about in SCARM as usual.</p>
   <div class="card">
     <label for="scWhat">What do you want designed?</label>
     <textarea id="scWhat" rows="6" placeholder="e.g. Redo the top-left station so the platform fits the Scotsman and four coaches, with a passing loop. Keep everything else. Peco Code 100, medium points, nothing under 600 mm on the main." data-store="sc-what"></textarea>
@@ -724,6 +724,9 @@ ol.steps li{margin:6px 0}
     <div id="scThumbs" class="thumbs"></div>
     <button class="btn" id="scSend" type="button" style="display:block;width:100%;margin-top:14px">Send the design request</button>
     <div id="scStatus" class="muted small" style="margin:10px 0 0"></div>
+  </div>
+  <div class="card warn small">
+    <b>Where this stands, honestly.</b> The form works and every request is read. The .scarm file itself is the hard part: SCARM's file format isn't published, so the first requests come back as a drawing of the plan plus a note, while the format gets worked out from real files. Your own .scarm file attached here is the most useful sample there is. Once a generated file opens cleanly in SCARM, this note disappears and the file comes with every reply.
   </div>
   <div class="card tint small">
     <b>Tip.</b> Attaching your current .scarm file is the single most useful thing. It means the new file uses your exact board, your exact track pieces, and slots into what you already have.
